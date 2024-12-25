@@ -1,9 +1,13 @@
 [project]
-name = "jax-spatial-algebra"
+name = "jax-spatial"
 version = "0.1.0"
 description = "A jax pytree library for spatial vector algebra"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = [
     "jax>=0.4.38",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
