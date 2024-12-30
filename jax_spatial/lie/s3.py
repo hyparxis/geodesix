@@ -40,6 +40,7 @@ class Quaternion:
     def vec(self) -> jax.Array:
         return jnp.array([self.x, self.y, self.z])
 
+    @classmethod
     def from_rotation_matrix(cls, R: jnp.ndarray) -> "Quaternion":
         """
         Construct a quaternion from a 3x3 rotation matrix.
@@ -49,7 +50,7 @@ class Quaternion:
 
         trace = R[0, 0] + R[1, 1] + R[2, 2]
 
-        def case0(_):
+        def case0():
             w = jnp.sqrt(jnp.maximum(trace + 1.0, 0.0)) / 2.0
             denom = 4.0 * w
             x = (R[2, 1] - R[1, 2]) / denom
@@ -57,7 +58,7 @@ class Quaternion:
             z = (R[1, 0] - R[0, 1]) / denom
             return Quaternion(w, x, y, z)
 
-        def case1(_):
+        def case1():
             x = jnp.sqrt(jnp.maximum((R[0, 0] - R[1, 1] - R[2, 2] + 1.0), 0.0)) / 2.0
             denom = 4.0 * x
             w = (R[2, 1] - R[1, 2]) / denom
@@ -65,7 +66,7 @@ class Quaternion:
             z = (R[0, 2] + R[2, 0]) / denom
             return Quaternion(w, x, y, z)
 
-        def case2(_):
+        def case2():
             y = jnp.sqrt(jnp.maximum((-R[0, 0] + R[1, 1] - R[2, 2] + 1.0), 0.0)) / 2.0
             denom = 4.0 * y
             w = (R[0, 2] - R[2, 0]) / denom
@@ -73,7 +74,7 @@ class Quaternion:
             z = (R[1, 2] + R[2, 1]) / denom
             return Quaternion(w, x, y, z)
 
-        def case3(_):
+        def case3():
             z = jnp.sqrt(jnp.maximum((-R[0, 0] - R[1, 1] + R[2, 2] + 1.0), 0.0)) / 2.0
             denom = 4.0 * z
             w = (R[1, 0] - R[0, 1]) / denom
@@ -100,23 +101,23 @@ def log(q: Quaternion):
 
     Inspired by GTSAM, handles edge cases near w ~ ±1 using a Taylor expansion.
     """
-    w = jnp.array([q.w])
+    w = jnp.array(q.w)
     v = q.vec()
 
     nearly_one = 1.0 - 1e-12
     nearly_negative_one = -1.0 + 1e-12
 
-    def near_positive_one():
+    def near_positive_one(_):
         # w ~ +1 => small rotation => use Taylor expansion
         # (8/3 - 2/3 * w) * v
         return (8.0 / 3.0 - (2.0 / 3.0) * w) * v
 
-    def near_negative_one():
+    def near_negative_one(_):
         # w ~ -1 => rotation near 180° => use Taylor expansion
         # (-8/3 - 2/3 * w) * v
         return (-8.0 / 3.0 - (2.0 / 3.0) * w) * v
 
-    def general_case():
+    def general_case(_):
         # Canonicalize sign
         sign = jnp.where(w > 0.0, 1.0, -1.0)
         w_signed = sign * w
@@ -140,11 +141,11 @@ def log(q: Quaternion):
     return jax.lax.cond(
         w > nearly_one,
         near_positive_one,
-        lambda: jax.lax.cond(
+        lambda _: jax.lax.cond(
             w < nearly_negative_one,
             near_negative_one,
             general_case,
             operand=None,
         ),
         operand=None,
-    )
+    ).reshape((3, 1))

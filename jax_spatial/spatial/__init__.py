@@ -1,1 +1,1 @@
-from .screw import Twist, Wrench
+from .screw import LinearMap, Twist, Wrench

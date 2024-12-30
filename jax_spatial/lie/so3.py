@@ -64,10 +64,7 @@ def left_jacobian_inverse(tau: jax.Array) -> jax.Array:
 @jax.tree_util.register_pytree_node_class
 class SO3:
     """
-    A class representing an SO(3) rotation via an internally stored unit quaternion.
-    Typically:
-      - w,x,y,z with w as the real part (cos(theta/2))
-      - (x,y,z) as the imaginary part (axis*sin(theta/2))
+    A class representing an SO(3) rotation matrix.
     """
 
     def __init__(self, rotation: jax.Array, from_frame: str, to_frame: str):
