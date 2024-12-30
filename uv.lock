@@ -24,7 +24,7 @@ wheels = [
 ]
 
 [[package]]
-name = "jax-spatial"
+name = "geodesix"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

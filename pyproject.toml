@@ -1,5 +1,5 @@
 [project]
-name = "jax-spatial"
+name = "geodesix"
 version = "0.1.0"
 description = "A jax pytree library for spatial vector algebra"
 readme = "README.md"
