@@ -4,8 +4,9 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 
-from ..spatial.screw import Twist, Wrench
-from ..util.math import skew
+from ..spatial.twist import Twist
+from ..spatial.wrench import Wrench
+from ..utils.math import skew
 from . import so3
 
 # TODO: improve error and comments

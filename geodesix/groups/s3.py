@@ -6,7 +6,6 @@ def wrap_to_pi(angle: jnp.ndarray) -> jnp.ndarray:
     """
     Wrap an angle (in radians) to the interval [-pi, pi].
     """
-    # A common "mod" trick:
     return (angle + jnp.pi) % (2.0 * jnp.pi) - jnp.pi
 
 
