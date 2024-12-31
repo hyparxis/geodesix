@@ -1,7 +1,8 @@
-import jax
 from typing import Union, overload
 
-from ..spatial.screw import Twist, Wrench
+import jax
+
+from ..spatial import Twist, Wrench
 
 
 @jax.tree_util.register_pytree_node_class

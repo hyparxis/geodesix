@@ -1,7 +1,7 @@
 import jax
 import jax.numpy as jnp
 
-from ..util.math import deskew, skew
+from ..utils.math import deskew, skew
 from . import s3
 
 
